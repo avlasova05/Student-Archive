@@ -6,7 +6,7 @@ bp = Blueprint('grades', __name__, url_prefix='/grades')
 def get_grades():
     try:
         cursor = current_app.mysql.connection.cursor()
-        cursor.execute("SELECT * FROM students")
+        cursor.execute("SELECT * FROM grades")
         grades = cursor.fetchall()
         cursor.close()
         return render_template('grades/list.html', grades=grades)
