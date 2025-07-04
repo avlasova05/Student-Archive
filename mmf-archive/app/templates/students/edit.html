@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Edit Student</h2>
+    <form method="POST" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="full_name" class="form-label">Full Name</label>
+            <input type="text" class="form-control" id="full_name" name="full_name" 
+                   value="{{ student[1] }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="group_name" class="form-label">Group</label>
+            <input type="text" class="form-control" id="group_name" name="group_name" 
+                   value="{{ student[2] }}">
+        </div>
+        <div class="mb-3">
+            <label for="photo" class="form-label">Photo</label>
+            <input type="file" class="form-control" id="photo" name="photo">
+            {% if student[3] %}
+            <div class="mt-2">
+                <img src="{{ url_for('static', filename='images/' + student[3]) }}" width="50">
+                <span>Current photo: {{ student[3] }}</span>
+            </div>
+            {% endif %}
+        </div>
+        <button type="submit" class="btn btn-primary">Update Student</button>
+    </form>
+</div>
+{% endblock %}
