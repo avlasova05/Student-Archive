@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Add a debt</h2>
+    <form method="POST">
+        <div class="mb-3">
+            <label for="student_id" class="form-label">Student</label>
+            <select name="student_id" class="form-select" required>
+                {% for s in students %}
+                    <option value="{{ s[0] }}">{{ s[1] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="subject_id" class="form-label">Subject</label>
+            <select name="subject_id" class="form-select" required>
+                {% for s in subjects %}
+                    <option value="{{ s[0] }}">{{ s[1] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="exam_type" class="form-label">Type</label>
+            <select name="exam_type" class="form-select" id="examType" required onchange="updateResultOptions()">
+                <option value="exam">Exam</option>
+                <option value="credit">Credit</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="result" class="form-label">Comment</label>
+            <select name="result" class="form-select" id="resultSelect" required>
+
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="first_date" class="form-label">Created a debt date</label>
+            <input type="date" name="first_date" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="second_date" class="form-label">Due to date</label>
+            <input type="date" name="second_date" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>
+
+<script>
+function updateResultOptions() {
+    const examType = document.getElementById('examType').value;
+    const resultSelect = document.getElementById('resultSelect');
+    resultSelect.innerHTML = ''; // очистка
+
+    let options = [];
+
+    if (examType === 'exam') {
+        for (let i = 1; i <= 10; i++) {
+            options.push(i.toString());
+        }
+    } else if (examType === 'credit') {
+        options = ['passed', 'not passed'];
+    }
+
+    for (const opt of options) {
+        const option = document.createElement('option');
+        option.value = opt;
+        option.textContent = opt;
+        resultSelect.appendChild(option);
+    }
+}
+
+// при загрузке страницы:
+document.addEventListener("DOMContentLoaded", updateResultOptions);
+</script>
+{% endblock %}

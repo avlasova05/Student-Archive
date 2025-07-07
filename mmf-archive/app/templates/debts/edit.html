@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Edit a debt</h2>
+    <form method="POST">
+        <div class="mb-3">
+            <label for="id_student" class="form-label">Student</label>
+            <select id="id_student" name="id_student" class="form-select" required>
+                {% for student in students %}
+                <option value="{{ student[0] }}" {% if student[0] == debt[1] %}selected{% endif %}>{{ student[1] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="id_subject" class="form-label">Subject</label>
+            <select id="id_subject" name="id_subject" class="form-select" required>
+                {% for subject in subjects %}
+                <option value="{{ subject[0] }}" {% if subject[0] == debt[2] %}selected{% endif %}>{{ subject[1] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="first_date" class="form-label">Debt created date</label>
+            <input type="date" id="first_date" name="first_date" class="form-control" value="{{ debt[3]|string }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="second_date" class="form-label">Due to date</label>
+            <input type="date" id="second_date" name="second_date" class="form-control" value="{{ debt[4]|string }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="exam_type" class="form-label">Type</label>
+            <select id="exam_type" name="exam_type" class="form-select" required>
+                <option value="exam" {% if debt[5] == 'exam' %}selected{% endif %}>Exam</option>
+                <option value="credit" {% if debt[5] == 'credit' %}selected{% endif %}>Credit</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="result" class="form-label">Comment</label>
+            <select id="result" name="result" class="form-select" required>
+                <option value="not passed" {% if debt[6] == 'not passed' %}selected{% endif %}>Not passed</option>
+                <option value="credit" {% if debt[6] == 'credit' %}selected{% endif %}>Credit</option>
+
+                {% for i in range(1,11) %}
+                <option value="{{ i }}" {% if debt[6] == i|string %}selected{% endif %}>{{ i }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+</div>
+{% endblock %}

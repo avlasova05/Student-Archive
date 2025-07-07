@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row text-center mb-5">
+    <div class="col">
+        <h1 class="display-4">Welcome to Student Management Archive</h1>
+        <p class="lead">MMF STUDENT ARCHIVE</p>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card feature-card">
+            <div class="card-body text-center">
+                <h5 class="card-title"><i class="bi bi-people-fill fs-1"></i></h5>
+                <h4 class="card-title">Students</h4>
+                <p class="card-text">Manage student personal information</p>
+                <a href="{{ url_for('students.get_students') }}" class="btn btn-primary">Go to Students</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card feature-card">
+            <div class="card-body text-center">
+                <h5 class="card-title"><i class="bi bi-book-fill fs-1"></i></h5>
+                <h4 class="card-title">Subjects</h4>
+                <p class="card-text">Manage subjects and certification methods</p>
+                <a href="{{ url_for('subjects.get_subjects') }}" class="btn btn-primary">Go to Subjects</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card feature-card">
+            <div class="card-body text-center">
+                <h5 class="card-title"><i class="bi bi-award-fill fs-1"></i></h5>
+                <h4 class="card-title">Grades</h4>
+                <p class="card-text">Manage student academic performance</p>
+                <a href="{{ url_for('grades.get_grades') }}" class="btn btn-primary">Go to Grades</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mt-4">
+        <div class="card feature-card">
+            <div class="card-body text-center">
+                <h5 class="card-title"><i class="bi bi-calendar-check-fill fs-1"></i></h5>
+                <h4 class="card-title">Attendance</h4>
+                <p class="card-text">Manage student class attendance records</p>
+                <a href="{{ url_for('attendance.list_attendance') }}" class="btn btn-primary">Go to Attendance</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mt-4">
+        <div class="card feature-card">
+            <div class="card-body text-center">
+                <h5 class="card-title"><i class="bi bi-exclamation-triangle-fill fs-1"></i></h5>
+                <h4 class="card-title">Debts</h4>
+                <p class="card-text">Manage student educational debts</p>
+                <a href="{{ url_for('debts.list_debts') }}" class="btn btn-primary">Go to Debts</a>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
