@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Edit Subject</h2>
+    <form method="POST">
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" name="name" class="form-control" value="{{ subject[1] }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="type" class="form-label">Type</label>
+            <select name="type" class="form-select" required>
+                <option value="exam" {% if subject[2] == 'exam' %}selected{% endif %}>Exam</option>
+                <option value="credit" {% if subject[2] == 'credit' %}selected{% endif %}>Credit</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a href="{{ url_for('subjects.get_subjects') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}
