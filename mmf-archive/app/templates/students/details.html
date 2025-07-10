@@ -2,99 +2,136 @@
 
 {% block content %}
 <div class="container mt-4">
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body text-center">
-                    {% if student.photo %}
-                    <img src="{{ url_for('static', filename='images/' + student.photo) }}"
-                         width="200" class="img-thumbnail mb-3">
+    <a href="{{ url_for('students.get_students') }}" class="btn btn-secondary mb-3">Back to the list of students</a>
+
+    <h2>{{ student.full_name }}</h2>
+    <p><strong>Group:</strong> {{ student.group_name }}</p>
+    {% if student.photo %}
+        <img src="{{ url_for('students.get_student_photo', student_id=student.id) }}" width="150" class="rounded mb-3">
+    {% else %}
+        <p class="text-muted">No photo</p>
+    {% endif %}
+
+    <hr>
+
+    <h4>Grades</h4>
+    {% if student.grades %}
+    <table class="table table-sm table-bordered align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Subject</th>
+                <th>Date</th>
+                <th>Grade</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for subject, date, grade in student.grades %}
+            <tr>
+                <td>{{ subject }}</td>
+                <td>{{ date.strftime('%Y-%m-%d') if date else 'N/A' }}</td>
+                <td>{{ grade }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="text-muted">No grades</p>
+    {% endif %}
+
+    <h4 class="mt-4">Subjects</h4>
+    {% if student.exams_and_credits %}
+    <table class="table table-sm table-bordered align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Subject</th>
+                <th>Type</th>
+                <th>Date</th>
+                <th>Result</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for subject, exam_type, date, result in student.exams_and_credits %}
+            <tr>
+                <td>{{ subject }}</td>
+                <td>{{ exam_type }}</td>
+                <td>{{ date.strftime('%Y-%m-%d') if date else 'N/A' }}</td>
+                <td>
+                    {% if result == 'passed' %}
+                        <span class="text-success">Passed</span>
                     {% else %}
-                    <div class="text-muted mb-3">No photo</div>
+                        <span class="text-danger">Failed</span>
                     {% endif %}
-                    <h3>{{ student.full_name }}</h3>
-                    <p class="text-muted">{{ student.group_name }}</p>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="text-muted">No exams and credits</p>
+    {% endif %}
 
-                    <div class="mt-3">
-                        <a href="{{ url_for('students.edit_student', student_id=student.id) }}"
-                           class="btn btn-warning">Edit</a>
-                        <form action="{{ url_for('students.delete_student', student_id=student.id) }}"
-                              method="POST" style="display:inline;">
-                            <button type="submit" class="btn btn-danger"
-                                    onclick="return confirm('Are you sure?')">Delete</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <h4 class="mt-4">Debts</h4>
+    {% if student.debts %}
+    <table class="table table-sm table-bordered align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Subject</th>
+                <th>Type</th>
+                <th>Created Date</th>
+                <th>Due Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for subject, exam_type, created_date, due_date, status in student.debts %}
+            <tr>
+                <td>{{ subject }}</td>
+                <td>{{ exam_type }}</td>
+                <td>{{ created_date.strftime('%Y-%m-%d') if created_date else 'N/A' }}</td>
+                <td>{{ due_date.strftime('%Y-%m-%d') if due_date else 'N/A' }}</td>
+                <td>
+                    {% if status == 'passed' %}
+                        <span class="text-success">Passed</span>
+                    {% else %}
+                        <span class="text-danger">Not passed</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="text-muted">No debts</p>
+    {% endif %}
 
-        <div class="col-md-8">
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h4>Grades</h4>
-                </div>
-                <div class="card-body">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Subject</th>
-                                <th>Grade</th>
-                                <th>Status</th>
-                                <th>Type</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for grade in student.grades %}
-                            <tr>
-                                <td>{{ grade[1] }}</td>
-                                <td>{{ grade[2] }}</td>
-                                <td>{{ grade[3] }}</td>
-                                <td>{{ grade[4] }}</td>
-                            </tr>
-                            {% else %}
-                            <tr>
-                                <td colspan="4" class="text-muted">No grades found</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <h4>Debts</h4>
-                </div>
-                <div class="card-body">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Subject</th>
-                                <th>Date Created</th>
-                                <th>Status</th>
-                                <th>Due Date</th>
-                                <th>Comment</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for debt in student.debts %}
-                            <tr>
-                                <td>{{ debt[1] }}</td>
-                                <td>{{ debt[2] }}</td>
-                                <td>{{ debt[3] }}</td>
-                                <td>{{ debt[4] }}</td>
-                                <td>{{ debt[5] }}</td>
-                            </tr>
-                            {% else %}
-                            <tr>
-                                <td colspan="5" class="text-muted">No debts found</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+    <h4 class="mt-4">Attendance</h4>
+    {% if student.attendance %}
+    <table class="table table-sm table-bordered align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Subject</th>
+                <th>Date</th>
+                <th>Attendance</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for subject, date, presence in student.attendance %}
+            <tr>
+                <td>{{ subject }}</td>
+                <td>{{ date.strftime('%Y-%m-%d') if date else 'N/A' }}</td>
+                <td>
+                    {% if presence %}
+                        <span class="text-success">✅ Present</span>
+                    {% else %}
+                        <span class="text-danger">❌ Absent</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="text-muted">No attendance data</p>
+    {% endif %}
 </div>
 {% endblock %}
