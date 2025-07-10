@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Add grade</h2>
+    <form method="POST">
+        <div class="mb-3">
+            <label for="student_id" class="form-label">Student</label>
+            <select name="student_id" class="form-select" required>
+                {% for student in students %}
+                <option value="{{ student[0] }}">{{ student[1] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="subject_id" class="form-label">Subject</label>
+            <select name="subject_id" class="form-select" required>
+                {% for subject in subjects %}
+                <option value="{{ subject[0] }}">{{ subject[1] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="grade" class="form-label">Grade (1-10)</label>
+            <input type="number" name="grade" class="form-control" min="1" max="10">
+            <small class="text-muted">Optional field </small>
+        </div>
+        <div class="mb-3">
+            <label for="status" class="form-label">Status</label>
+            <select name="status" class="form-select" required>
+                <option value="passed">Passed</option>
+                <option value="not passed">Not passed</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a href="{{ url_for('grades.get_grades') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}
