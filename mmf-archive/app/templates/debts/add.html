@@ -3,79 +3,83 @@
 {% block content %}
 <div class="container mt-4">
     <h2>Add a debt</h2>
-    <form method="POST">
+    <form method="POST" action="{{ url_for('debts.add_debt') }}">
         <div class="mb-3">
             <label for="student_id" class="form-label">Student</label>
-            <select name="student_id" class="form-select" required>
-                {% for s in students %}
-                    <option value="{{ s[0] }}">{{ s[1] }}</option>
+            <select name="student_id" id="student_id" class="form-select" required>
+                <option value="">Select student</option>
+                {% for student in students %}
+                    <option value="{{ student[0] }}" {% if request.form.get('student_id') == student[0]|string %}selected{% endif %}>
+                        {{ student[1] }}
+                    </option>
                 {% endfor %}
             </select>
         </div>
 
         <div class="mb-3">
             <label for="subject_id" class="form-label">Subject</label>
-            <select name="subject_id" class="form-select" required>
-                {% for s in subjects %}
-                    <option value="{{ s[0] }}">{{ s[1] }}</option>
+            <select name="subject_id" id="subject_id" class="form-select" required>
+                <option value="">Select subject</option>
+                {% for subject in subjects %}
+                    <option value="{{ subject[0] }}" {% if request.form.get('subject_id') == subject[0]|string %}selected{% endif %}>
+                        {{ subject[1] }}
+                    </option>
                 {% endfor %}
             </select>
         </div>
 
         <div class="mb-3">
-            <label for="exam_type" class="form-label">Type</label>
-            <select name="exam_type" class="form-select" id="examType" required onchange="updateResultOptions()">
-                <option value="exam">Exam</option>
-                <option value="credit">Credit</option>
+            <label for="status" class="form-label">Status</label>
+            <select name="status" id="status" class="form-select" required>
+                <option value="">Select status</option>
+                {% for status in statuses %}
+                    <option value="{{ status }}" {% if request.form.get('status') == status %}selected{% endif %}>
+                        {{ status|capitalize }}
+                    </option>
+                {% endfor %}
             </select>
         </div>
 
         <div class="mb-3">
-            <label for="result" class="form-label">Comment</label>
-            <select name="result" class="form-select" id="resultSelect" required>
-
-            </select>
+            <label for="comment" class="form-label">Comment</label>
+            <textarea name="comment" id="comment" class="form-control" placeholder="Optional comment">{% if request.form.get('comment') %}{{ request.form.get('comment') }}{% endif %}</textarea>
         </div>
 
         <div class="mb-3">
-            <label for="first_date" class="form-label">Created a debt date</label>
-            <input type="date" name="first_date" class="form-control" required>
+            <label for="date_created" class="form-label">Creation Date</label>
+            <input type="date" name="date_created" id="date_created" class="form-control" required
+                   value="{% if request.form.get('date_created') %}{{ request.form.get('date_created') }}{% else %}{{ datetime.now().strftime('%Y-%m-%d') }}{% endif %}">
         </div>
 
         <div class="mb-3">
-            <label for="second_date" class="form-label">Due to date</label>
-            <input type="date" name="second_date" class="form-control" required>
+            <label for="due_date" class="form-label">Due Date</label>
+            <input type="date" name="due_date" id="due_date" class="form-control" required
+                   value="{{ request.form.get('due_date', '') }}">
         </div>
 
         <button type="submit" class="btn btn-primary">Save</button>
+        <a href="{{ url_for('debts.list_debts') }}" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
 
 <script>
-function updateResultOptions() {
-    const examType = document.getElementById('examType').value;
-    const resultSelect = document.getElementById('resultSelect');
-    resultSelect.innerHTML = ''; // очистка
+document.addEventListener("DOMContentLoaded", function() {
+    // Set minimum due date to today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('due_date').min = today;
 
-    let options = [];
-
-    if (examType === 'exam') {
-        for (let i = 1; i <= 10; i++) {
-            options.push(i.toString());
-        }
-    } else if (examType === 'credit') {
-        options = ['passed', 'not passed'];
+    // If form was submitted with errors, preserve the due date value
+    const dueDateInput = document.getElementById('due_date');
+    if (!dueDateInput.value) {
+        // Set default due date to 7 days from now if not set
+        const nextWeek = new Date();
+        nextWeek.setDate(nextWeek.getDate() + 7);
+        dueDateInput.value = nextWeek.toISOString().split('T')[0];
     }
 
-    for (const opt of options) {
-        const option = document.createElement('option');
-        option.value = opt;
-        option.textContent = opt;
-        resultSelect.appendChild(option);
-    }
-}
-
-// при загрузке страницы:
-document.addEventListener("DOMContentLoaded", updateResultOptions);
+    // Validation for date_created to not be in the future
+    const dateCreatedInput = document.getElementById('date_created');
+    dateCreatedInput.max = today;
+});
 </script>
 {% endblock %}
